@@ -3,9 +3,9 @@ from enum import Enum
 
 class TextType(Enum):
     PLAIN_TEXT = "plain_text"
-    BOLD_TEXT = "**bold_text**"
-    ITALIC_TEXT = "__italic_text__"
-    CODE_TEXT = "`code text`"
+    BOLD = "**bold_text**"
+    ITALIC = "__italic_text__"
+    CODE = "`code text`"
     LINKS = "link: [anchor text](url)"
     IMAGES = "image: ![alt text](url)"
 
