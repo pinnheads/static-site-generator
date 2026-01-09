@@ -1,3 +1,5 @@
+import re
+
 from textnode import TextType, TextNode
 from htmlnode import LeafNode
 
@@ -72,3 +74,29 @@ def split_nodes_delimiter(old_nodes: list[TextNode], dilimiter: str, text_type: 
         extracted_nodes.extend(new_nodes)
 
     return extracted_nodes
+
+
+def extract_markdown_images(text) -> list:
+    """
+    Extracts the alt text and url from a markdown image link.
+
+    accepts:
+        - text: a string containing "![alt](url)"
+
+    return:
+        - a list of tuples -> [(alt, url)]
+    """
+    return re.findall(r"\!\[(.*?)\]\((.*?)\)", text)
+
+
+def extract_markdown_links(text) -> list:
+    """
+    Extracts the text and url from a markdown link.
+
+    accepts:
+        - text: a string containing "[text](url)"
+
+    return:
+        - a list of tuples -> [(text, url)]
+    """
+    return re.findall(r"(?<!!)\[(.*?)\]\((.*?)\)", text)
