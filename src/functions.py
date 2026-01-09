@@ -183,9 +183,21 @@ def split_nodes_link(old_nodes: list[TextNode]):
 
 
 def text_to_textnodes(text: str) -> list[TextNode]:
+    """
+    Converts a simple markdown text string to a list of TextNodes
+    """
     node = TextNode(text, TextType.PLAIN_TEXT)
     bold_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
     italic_nodes = split_nodes_delimiter(bold_nodes, "_", TextType.ITALIC)
     code_nodes = split_nodes_delimiter(italic_nodes, "`", TextType.CODE)
     link_nodes = split_nodes_link(code_nodes)
     return split_nodes_image(link_nodes)
+
+
+def markdown_to_blocks(markdown: str) -> list[str]:
+    """
+    Converts markdown blocks to a list of strings
+    """
+    blocks = markdown.split("\n\n")
+    blocks = [block.strip() for block in blocks]
+    return list(filter(lambda x: x != "", blocks))
