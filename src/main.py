@@ -24,7 +24,7 @@ def generate_page(from_path: os.PathLike, template_path: os.PathLike, dest_path:
     title = extract_title(md_content)
 
     content = template_content.replace("{{ Title }}", title).replace(
-        "{{ Content }}", html_content).replace("href=\"/", f'href="{basepath}').replace("src=\"/", f'src="{basepath}')
+        "{{ Content }}", html_content).replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
     os.makedirs(os.path.dirname(os.path.join(
         os.path.abspath("."), dest_path)), exist_ok=True)
 
@@ -56,7 +56,7 @@ def generate_page_recursive(dir_path_content="content/", template_path="template
 
 def main():
     basepath = "/"
-    if len(sys.argv) == 0 and sys.argv[1] is not None:
+    if len(sys.argv) != 0 and sys.argv[1] is not None:
         basepath = sys.argv[1]
 
     copy_dir_to_public()
