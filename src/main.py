@@ -1,11 +1,12 @@
 import os
+import sys
 
 from functions import extract_title
 from markdowntohtml import markdown_to_html_node
 from copytopublic import copy_dir_to_public
 
 
-def generate_page(from_path: os.PathLike, template_path: os.PathLike, dest_path: os.PathLike):
+def generate_page(from_path: os.PathLike, template_path: os.PathLike, dest_path: os.PathLike, basepath="/"):
     md_content = None
     template_content = None
     html_content = None
@@ -23,7 +24,7 @@ def generate_page(from_path: os.PathLike, template_path: os.PathLike, dest_path:
     title = extract_title(md_content)
 
     content = template_content.replace("{{ Title }}", title).replace(
-        "{{ Content }}", html_content)
+        "{{ Content }}", html_content).replace("href=\"/", f'href="{basepath}').replace("src=\"/", f'src="{basepath}')
     os.makedirs(os.path.dirname(os.path.join(
         os.path.abspath("."), dest_path)), exist_ok=True)
 
@@ -31,7 +32,7 @@ def generate_page(from_path: os.PathLike, template_path: os.PathLike, dest_path:
         dest_file.write(content)
 
 
-def generate_page_recursive(dir_path_content="content/", template_path="template.html", dest_dir_path="public/"):
+def generate_page_recursive(dir_path_content="content/", template_path="template.html", dest_dir_path="docs/", basepath="/"):
     # get abs paths
     src_path = os.path.join(os.path.abspath("."), dir_path_content)
     template = os.path.join(os.path.abspath("."), template_path)
@@ -41,17 +42,25 @@ def generate_page_recursive(dir_path_content="content/", template_path="template
     for item in items:
         current_item_path = os.path.join(src_path, item)
         if os.path.isfile(current_item_path):
-            generate_page(current_item_path, template,
-                          os.path.join(dest_dir_path, item.replace(".md", ".html")))
+            generate_page(
+                current_item_path,
+                template,
+                os.path.join(dest_dir_path, item.replace(".md", ".html")),
+                basepath
+            )
         else:
             new_dest_path = os.path.join(dest_dir, item)
             generate_page_recursive(
-                current_item_path, template_path, new_dest_path)
+                current_item_path, template_path, new_dest_path, basepath)
 
 
 def main():
+    basepath = "/"
+    if len(sys.argv) == 0 and sys.argv[1] is not None:
+        basepath = sys.argv[1]
+
     copy_dir_to_public()
-    generate_page_recursive()
+    generate_page_recursive(basepath=basepath)
 
 
 if __name__ == "__main__":

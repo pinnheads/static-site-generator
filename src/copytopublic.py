@@ -8,7 +8,8 @@ src_dir = os.path.join(working_directory, "static")
 
 def copy_dir_to_public(src_path=src_dir, dest_path=dest_dir):
     # remove all the contents from public to ensure clean copy
-    shutil.rmtree(dest_path)
+    if os.path.exists(dest_path):
+        shutil.rmtree(dest_path)
 
     # Create a new public directory
     os.mkdir(dest_path)
