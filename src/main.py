@@ -1,10 +1,8 @@
-from textnode import TextNode, TextType
+from copytopublic import copy_dir_to_public
 
 
 def main():
-    new_node = TextNode("Utsav Deep's Portfolio",
-                        TextType.LINKS, "https://utsavdeep.com")
-    print(new_node)
+    copy_dir_to_public()
 
 
 if __name__ == "__main__":
