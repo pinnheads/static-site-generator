@@ -1,6 +1,7 @@
 import unittest
 from functions import (
-    split_nodes_delimiter, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks
+    split_nodes_delimiter, split_nodes_image, split_nodes_link,
+    text_to_textnodes, markdown_to_blocks, extract_title
 )
 
 from textnode import TextNode, TextType
@@ -209,6 +210,9 @@ This is the same paragraph on a new line
                 "- This is a list\n- with items",
             ],
         )
+
+    def test_extract_title(self):
+        self.assertEqual(extract_title("# Heading "), "Heading")
 
 
 if __name__ == "__main__":

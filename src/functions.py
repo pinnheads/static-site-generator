@@ -201,3 +201,12 @@ def markdown_to_blocks(markdown: str) -> list[str]:
     blocks = markdown.split("\n\n")
     blocks = [block.strip() for block in blocks]
     return list(filter(lambda x: x != "", blocks))
+
+
+def extract_title(markdown: str) -> str:
+    """Extract and return heading 1 from a md document"""
+    lines = markdown.split("\n")
+    for line in lines:
+        if line.startswith("# "):
+            return line.replace("# ", "").strip()
+    raise Exception("No Heading found that starts with '#'.")

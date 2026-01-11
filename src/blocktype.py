@@ -70,7 +70,7 @@ def list_block_to_html(md: str, block_type: BlockType) -> list[HTMLNode]:
     """Convert list markdown block to html nodes"""
     md = md.replace("\n", "")
     if block_type == BlockType.ORDERED_LIST:
-        md = re.sub(r"\d+\.", "- ", md)
+        md = re.sub(r"\d+\. ", "- ", md)
 
     texts = md.split("- ")
     children = []
