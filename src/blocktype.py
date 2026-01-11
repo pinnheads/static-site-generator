@@ -1,7 +1,8 @@
+import re
 from enum import Enum
 from htmlnode import LeafNode, HTMLNode, ParentNode
-from textnode import TextNode
-from functions import text_to_textnodes, text_node_to_html_node
+from textnode import TextNode, TextType
+from functions import text_to_textnodes, text_node_to_html_node, split_nodes_delimiter
 
 
 class BlockType(Enum):
@@ -30,6 +31,7 @@ def block_to_block_type(md: str) -> BlockType:
 
 
 def block_to_html(md: str, block_type: BlockType) -> HTMLNode:
+    """Converts markdown block to html nodes"""
     match(block_type):
         case BlockType.HEADING:
             return heading_block_to_html(md)
@@ -37,6 +39,10 @@ def block_to_html(md: str, block_type: BlockType) -> HTMLNode:
             return paragraph_block_to_html(md)
         case BlockType.QUOTE:
             return quote_block_to_html(md)
+        case BlockType.UNORDERED_LIST:
+            return list_block_to_html(md, BlockType.UNORDERED_LIST)
+        case BlockType.ORDERED_LIST:
+            return list_block_to_html(md, BlockType.ORDERED_LIST)
         case _:
             return paragraph_block_to_html(md)
 
@@ -46,11 +52,38 @@ def text_to_children(md: str) -> list[HTMLNode]:
     text_nodes = text_to_textnodes(md)
     new_nodes = []
     for node in text_nodes:
-        new_nodes.append(text_node_to_html_node(node))
+        html_node = text_node_to_html_node(node)
+        new_nodes.append(html_node)
     return new_nodes
 
 
+def list_block_to_html(md: str, block_type: BlockType) -> list[HTMLNode]:
+    """Convert list markdown block to html nodes"""
+    md = md.replace("\n", "")
+    if block_type == BlockType.ORDERED_LIST:
+        md = re.sub(r"\d+\.", "- ", md)
+
+    texts = md.split("- ")
+    children = []
+    for text in texts:
+        html_nodes = text_to_children(text)
+        if len(html_nodes) < 2:
+            li_node = map(lambda node: LeafNode(
+                "li", node.to_html()), html_nodes)
+        else:
+            html_nodes = [node.to_html() for node in html_nodes]
+            li_text = ''.join(html_nodes)
+            li_node = [LeafNode("li", li_text)]
+        children.extend(li_node)
+
+    if block_type == BlockType.ORDERED_LIST:
+        return ParentNode("ol", children)
+    else:
+        return ParentNode("ul", children)
+
+
 def quote_block_to_html(md: str) -> HTMLNode:
+    """Convert quote markdown block to html nodes"""
     md = md.replace("> ", "")
     children = text_to_children(md)
     return ParentNode("blockquote", children)

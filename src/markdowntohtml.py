@@ -16,3 +16,19 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
         child_nodes.append(block_to_html(block, block_type))
     # make all the block nodes children under a single parent HTMLNode
     return ParentNode("div", child_nodes)
+
+
+if __name__ == "__main__":
+
+    md = """
+- This is item 1
+- This is **bold item 2**
+
+# Heading 1
+
+1. This is _list 1_
+2. This is `list 2`
+
+> This is a test
+"""
+    print(markdown_to_html_node(md).to_html())
