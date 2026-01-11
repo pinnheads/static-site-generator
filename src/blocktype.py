@@ -43,6 +43,8 @@ def block_to_html(md: str, block_type: BlockType) -> HTMLNode:
             return list_block_to_html(md, BlockType.UNORDERED_LIST)
         case BlockType.ORDERED_LIST:
             return list_block_to_html(md, BlockType.ORDERED_LIST)
+        case BlockType.CODE:
+            return code_block_to_html(md)
         case _:
             return paragraph_block_to_html(md)
 
@@ -55,6 +57,13 @@ def text_to_children(md: str) -> list[HTMLNode]:
         html_node = text_node_to_html_node(node)
         new_nodes.append(html_node)
     return new_nodes
+
+
+def code_block_to_html(md: str) -> list[HTMLNode]:
+    formatted_lines = '\n'.join(
+        [line for line in md.split("\n") if not line.startswith("```")])
+    code_node = LeafNode("code", formatted_lines)
+    return ParentNode("pre", [code_node])
 
 
 def list_block_to_html(md: str, block_type: BlockType) -> list[HTMLNode]:
