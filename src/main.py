@@ -58,6 +58,7 @@ def main():
     basepath = "/"
     if len(sys.argv) != 0 and sys.argv[1] is not None:
         basepath = sys.argv[1]
+        copy_dir_to_public(dest_path="docs/")
 
     copy_dir_to_public()
     generate_page_recursive(basepath=basepath)

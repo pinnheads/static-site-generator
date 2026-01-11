@@ -11,7 +11,7 @@ def copy_dir_to_public(src_path=src_dir, dest_path=dest_dir):
     if os.path.exists(dest_path):
         shutil.rmtree(dest_path)
 
-    # Create a new public directory
+    # Create a new directory
     os.mkdir(dest_path)
 
     # copy contents
@@ -21,6 +21,6 @@ def copy_dir_to_public(src_path=src_dir, dest_path=dest_dir):
         if os.path.isfile(current_item_path):
             shutil.copy(current_item_path, dest_path)
         else:
-            new_dest_path = os.path.join(dest_dir, item)
+            new_dest_path = os.path.join(dest_path, item)
             os.mkdir(new_dest_path)
             copy_dir_to_public(current_item_path, new_dest_path)
