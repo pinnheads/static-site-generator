@@ -14,13 +14,16 @@ def copy_dir_to_public(src_path=src_dir, dest_path=dest_dir):
     # Create a new directory
     os.mkdir(dest_path)
 
-    # copy contents
-    items = os.listdir(src_path)
-    for item in items:
-        current_item_path = os.path.join(src_path, item)
-        if os.path.isfile(current_item_path):
-            shutil.copy(current_item_path, dest_path)
-        else:
-            new_dest_path = os.path.join(dest_path, item)
-            os.mkdir(new_dest_path)
-            copy_dir_to_public(current_item_path, new_dest_path)
+    def copy_recursive(current_src, current_dest):
+        items = os.listdir(current_src)
+        for item in items:
+            src_item_path = os.path.join(current_src, item)
+            dest_item_path = os.path.join(current_dest, item)
+            
+            if os.path.isfile(src_item_path):
+                shutil.copy(src_item_path, dest_item_path)
+            else:
+                os.mkdir(dest_item_path)
+                copy_recursive(src_item_path, dest_item_path)
+
+    copy_recursive(src_path, dest_path)
