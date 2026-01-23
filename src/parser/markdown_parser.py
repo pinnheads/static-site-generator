@@ -1,6 +1,9 @@
-from htmlnode import HTMLNode, ParentNode
-from functions import markdown_to_blocks
-from blocktype import block_to_block_type, block_to_html
+from src.core.htmlnode import HTMLNode, ParentNode
+from src.parser.block_parser import (
+    markdown_to_blocks,
+    block_to_block_type,
+    block_to_html,
+)
 
 
 def markdown_to_html_node(markdown: str) -> HTMLNode:

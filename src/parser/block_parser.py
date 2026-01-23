@@ -1,21 +1,21 @@
 import re
-from enum import Enum
-from htmlnode import LeafNode, HTMLNode, ParentNode
-from textnode import TextNode, TextType
-from functions import text_to_textnodes, text_node_to_html_node, split_nodes_delimiter
+
+from src.core.enums import BlockType
+from src.core.htmlnode import HTMLNode, LeafNode, ParentNode
+from src.parser.text_parser import text_node_to_html_node, text_to_textnodes
 
 
-class BlockType(Enum):
-    PARAGRAPH = "paragraph"
-    HEADING = "heading"
-    CODE = "code"
-    QUOTE = "quote"
-    UNORDERED_LIST = "unordered_list"
-    ORDERED_LIST = "ordered_list"
+def markdown_to_blocks(markdown: str) -> list[str]:
+    """
+    Converts markdown blocks to a list of strings
+    """
+    blocks = markdown.split("\n\n")
+    blocks = [block.strip() for block in blocks]
+    return list(filter(lambda x: x != "", blocks))
 
 
 def block_to_block_type(md: str) -> BlockType:
-    match(md):
+    match md:
         case md if md.startswith(("# ", "## ", "### ", "#### ", "##### ", "###### ")):
             return BlockType.HEADING
         case md if md.startswith("```"):
@@ -32,7 +32,7 @@ def block_to_block_type(md: str) -> BlockType:
 
 def block_to_html(md: str, block_type: BlockType) -> HTMLNode:
     """Converts markdown block to html nodes"""
-    match(block_type):
+    match block_type:
         case BlockType.HEADING:
             return heading_block_to_html(md)
         case BlockType.PARAGRAPH:
@@ -59,14 +59,16 @@ def text_to_children(md: str) -> list[HTMLNode]:
     return new_nodes
 
 
-def code_block_to_html(md: str) -> list[HTMLNode]:
-    formatted_lines = '\n'.join(
-        [line for line in md.split("\n") if not line.startswith("```")])
+def code_block_to_html(md: str) -> HTMLNode:
+    """Return formatted code block in HTML"""
+    formatted_lines = "\n".join(
+        [line for line in md.split("\n") if not line.startswith("```")]
+    )
     code_node = LeafNode("code", formatted_lines)
     return ParentNode("pre", [code_node])
 
 
-def list_block_to_html(md: str, block_type: BlockType) -> list[HTMLNode]:
+def list_block_to_html(md: str, block_type: BlockType) -> HTMLNode:
     """Convert list markdown block to html nodes"""
     md = md.replace("\n", "")
     if block_type == BlockType.ORDERED_LIST:
@@ -77,11 +79,10 @@ def list_block_to_html(md: str, block_type: BlockType) -> list[HTMLNode]:
     for text in texts:
         html_nodes = text_to_children(text)
         if len(html_nodes) < 2:
-            li_node = map(lambda node: LeafNode(
-                "li", node.to_html()), html_nodes)
+            li_node = map(lambda node: LeafNode("li", node.to_html()), html_nodes)
         else:
             html_nodes = [node.to_html() for node in html_nodes]
-            li_text = ''.join(html_nodes)
+            li_text = "".join(html_nodes)
             li_node = [LeafNode("li", li_text)]
         children.extend(li_node)
 
@@ -106,14 +107,14 @@ def paragraph_block_to_html(md: str) -> HTMLNode:
     return ParentNode("p", children)
 
 
-def heading_block_to_html(md: str) -> LeafNode:
+def heading_block_to_html(md: str) -> HTMLNode:
     """
     Converts a heading block to html leaf node
     """
     hash_count = md.count("#")
-    md = md.replace("#"*hash_count + " ", "")
+    md = md.replace("#" * hash_count + " ", "")
     children = text_to_children(md)
-    match(hash_count):
+    match hash_count:
         case 1:
             return ParentNode("h1", children)
         case 2:

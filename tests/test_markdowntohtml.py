@@ -1,5 +1,5 @@
 import unittest
-from markdowntohtml import markdown_to_html_node
+from src.parser.markdown_parser import markdown_to_html_node
 
 
 class TestMarkDownToHTML(unittest.TestCase):
@@ -20,7 +20,7 @@ class TestMarkDownToHTML(unittest.TestCase):
 """
         self.assertEqual(
             markdown_to_html_node(md).to_html(),
-            "<div><h1>Heading 1 with <code>code</code></h1><h2>Heading 2 with <b>bold text</b></h2><h3>Heading 3 with <i>italic text</i></h3><h4>Heading 4</h4><h5>Headning 5</h5><h6>Heading 6</h6></div>"
+            "<div><h1>Heading 1 with <code>code</code></h1><h2>Heading 2 with <b>bold text</b></h2><h3>Heading 3 with <i>italic text</i></h3><h4>Heading 4</h4><h5>Headning 5</h5><h6>Heading 6</h6></div>",
         )
 
     def test_paragraphs(self):
@@ -34,7 +34,7 @@ This is another paragraph with _italic_ text and `code` here
 """
         self.assertEqual(
             markdown_to_html_node(md).to_html(),
-            "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>"
+            "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
         )
 
     def test_quotes(self):
@@ -45,7 +45,7 @@ This is another paragraph with _italic_ text and `code` here
 """
         self.assertEqual(
             markdown_to_html_node(md).to_html(),
-            "<div><blockquote>We suffer more <b>often in imagination</b>,\nthan in reality\n--- Seneca</blockquote></div>"
+            "<div><blockquote>We suffer more <b>often in imagination</b>,\nthan in reality\n--- Seneca</blockquote></div>",
         )
 
     def test_unordered_list(self):
@@ -62,7 +62,7 @@ This is another paragraph with _italic_ text and `code` here
 """
         self.assertEqual(
             markdown_to_html_node(md).to_html(),
-            "<div><ul><li>This is item 1</li><li>This is <b>bold item 2</b></li></ul><h1>Heading 1</h1><ol><li>This is <i>list 1</i></li><li>This is <code>list 2</code></li></ol><blockquote>This is a test</blockquote></div>"
+            "<div><ul><li>This is item 1</li><li>This is <b>bold item 2</b></li></ul><h1>Heading 1</h1><ol><li>This is <i>list 1</i></li><li>This is <code>list 2</code></li></ol><blockquote>This is a test</blockquote></div>",
         )
 
     def test_codeblock(self):

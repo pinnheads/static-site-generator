@@ -1,12 +1,19 @@
 import unittest
 
-from blocktype import BlockType, block_to_block_type
+from src.core.enums import BlockType
+from src.parser.block_parser import block_to_block_type
 
 
 class TestBlockType(unittest.TestCase):
     def test_headings(self):
-        headings = ["# This is a heading1", "## This is heading2", "### This is heading3",
-                    "#### This is heading4", "##### This is heading5", "###### This is heading6"]
+        headings = [
+            "# This is a heading1",
+            "## This is heading2",
+            "### This is heading3",
+            "#### This is heading4",
+            "##### This is heading5",
+            "###### This is heading6",
+        ]
         for heading in headings:
             block_type = block_to_block_type(heading)
             self.assertEqual(block_type, BlockType.HEADING)

@@ -1,7 +1,8 @@
 import unittest
 
-from textnode import TextNode, TextType
-from functions import text_node_to_html_node
+from src.core.textnode import TextNode
+from src.core.enums import TextType
+from src.parser.text_parser import text_node_to_html_node
 
 
 class TestTextNode(unittest.TestCase):
@@ -11,16 +12,15 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node, node2)
 
     def test_not_eq(self):
-        node = TextNode("This is a image node",
-                        TextType.IMAGES, "https://example.com")
-        node2 = TextNode("This is another image node",
-                         TextType.IMAGES, "https://utsavdeep.com")
+        node = TextNode("This is a image node", TextType.IMAGES, "https://example.com")
+        node2 = TextNode(
+            "This is another image node", TextType.IMAGES, "https://utsavdeep.com"
+        )
         self.assertNotEqual(node, node2)
 
     def test_text_type(self):
         node = TextNode("This is plain text", TextType.PLAIN_TEXT)
-        node2 = TextNode("This is a link", TextType.LINKS,
-                         "https://utsavdeep.com")
+        node2 = TextNode("This is a link", TextType.LINKS, "https://utsavdeep.com")
         self.assertNotEqual(node, node2)
 
     def test_text_to_leaf_plain(self):
@@ -55,8 +55,7 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(html_node.props["href"], "https://utsavdeep.com")
 
     def test_text_to_leaf_img(self):
-        node = TextNode("example image", TextType.IMAGES,
-                        "https://picsum.photos/200")
+        node = TextNode("example image", TextType.IMAGES, "https://picsum.photos/200")
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "img")
         self.assertEqual(html_node.value, "")

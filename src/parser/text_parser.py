@@ -1,7 +1,8 @@
 import re
 
-from textnode import TextType, TextNode
-from htmlnode import LeafNode
+from src.core.enums import TextType
+from src.core.htmlnode import LeafNode
+from src.core.textnode import TextNode
 
 
 def text_node_to_html_node(text_node) -> LeafNode:
@@ -29,16 +30,22 @@ def text_node_to_html_node(text_node) -> LeafNode:
             return LeafNode(tag="code", value=text_node.text)
         case TextType.LINKS:
             # return a LeafNode with a tag and href as props
-            return LeafNode(tag="a", value=text_node.text, props={"href": text_node.url})
+            return LeafNode(
+                tag="a", value=text_node.text, props={"href": text_node.url}
+            )
         case TextType.IMAGES:
             # return a LeafNode iwth img tag and src, alt props
-            return LeafNode(tag="img", value="", props={"src": text_node.url, "alt": text_node.text})
+            return LeafNode(
+                tag="img", value="", props={"src": text_node.url, "alt": text_node.text}
+            )
         case _:
             # raise exception on any other TextType
             raise Exception(f"{text_node} is not a valid TextNode!")
 
 
-def split_nodes_delimiter(old_nodes: list[TextNode], dilimiter: str, text_type: TextType) -> list:
+def split_nodes_delimiter(
+    old_nodes: list[TextNode], dilimiter: str, text_type: TextType
+) -> list:
     """
     Accepts a list of TextNodes extracts any inline nodes that might be presesnt using the passed dilimiter.
 
@@ -58,8 +65,11 @@ def split_nodes_delimiter(old_nodes: list[TextNode], dilimiter: str, text_type: 
             continue
 
         if node.text.count(dilimiter) % 2 != 0:
-            raise Exception(f"Invalid Markdown Syntax! Matching {
-                            dilimiter} was not found in {node.text}.")
+            raise Exception(
+                f"Invalid Markdown Syntax! Matching {dilimiter} was not found in {
+                    node.text
+                }."
+            )
 
         new_nodes = []
         split_strings = node.text.split(dilimiter)
@@ -69,8 +79,7 @@ def split_nodes_delimiter(old_nodes: list[TextNode], dilimiter: str, text_type: 
             if i % 2 != 0:
                 new_nodes.append(TextNode(split_strings[i], text_type))
             else:
-                new_nodes.append(
-                    TextNode(split_strings[i], TextType.PLAIN_TEXT))
+                new_nodes.append(TextNode(split_strings[i], TextType.PLAIN_TEXT))
         extracted_nodes.extend(new_nodes)
 
     return extracted_nodes
@@ -153,7 +162,6 @@ def split_nodes_link(old_nodes: list[TextNode]):
     """
     new_nodes = []
     for old_node in old_nodes:
-
         if old_node.text_type != TextType.PLAIN_TEXT:
             new_nodes.append(old_node)
             continue
@@ -192,15 +200,6 @@ def text_to_textnodes(text: str) -> list[TextNode]:
     code_nodes = split_nodes_delimiter(italic_nodes, "`", TextType.CODE)
     link_nodes = split_nodes_link(code_nodes)
     return split_nodes_image(link_nodes)
-
-
-def markdown_to_blocks(markdown: str) -> list[str]:
-    """
-    Converts markdown blocks to a list of strings
-    """
-    blocks = markdown.split("\n\n")
-    blocks = [block.strip() for block in blocks]
-    return list(filter(lambda x: x != "", blocks))
 
 
 def extract_title(markdown: str) -> str:

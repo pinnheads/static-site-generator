@@ -1,16 +1,20 @@
 import unittest
-from functions import (
-    split_nodes_delimiter, split_nodes_image, split_nodes_link,
-    text_to_textnodes, markdown_to_blocks, extract_title
-)
 
-from textnode import TextNode, TextType
+from src.parser.text_parser import (
+    split_nodes_delimiter,
+    split_nodes_image,
+    split_nodes_link,
+    text_to_textnodes,
+    extract_title,
+)
+from src.parser.block_parser import markdown_to_blocks
+from src.core.enums import TextType
+from src.core.textnode import TextNode
 
 
 class TestInlineMarkdown(unittest.TestCase):
     def test_delim_bold(self):
-        node = TextNode("This is text with a **bolded** word",
-                        TextType.PLAIN_TEXT)
+        node = TextNode("This is text with a **bolded** word", TextType.PLAIN_TEXT)
         new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
         self.assertListEqual(
             [
@@ -38,7 +42,8 @@ class TestInlineMarkdown(unittest.TestCase):
 
     def test_delim_bold_double_extended(self):
         node = TextNode(
-            "This is text with a **bolded** word and **another** word.", TextType.PLAIN_TEXT
+            "This is text with a **bolded** word and **another** word.",
+            TextType.PLAIN_TEXT,
         )
         new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
         self.assertListEqual(
@@ -68,8 +73,7 @@ class TestInlineMarkdown(unittest.TestCase):
         )
 
     def test_delim_italic(self):
-        node = TextNode("This is text with an _italic_ word",
-                        TextType.PLAIN_TEXT)
+        node = TextNode("This is text with an _italic_ word", TextType.PLAIN_TEXT)
         new_nodes = split_nodes_delimiter([node], "_", TextType.ITALIC)
         self.assertListEqual(
             [
@@ -94,8 +98,7 @@ class TestInlineMarkdown(unittest.TestCase):
         )
 
     def test_delim_code(self):
-        node = TextNode("This is text with a `code block` word",
-                        TextType.PLAIN_TEXT)
+        node = TextNode("This is text with a `code block` word", TextType.PLAIN_TEXT)
         new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
         self.assertListEqual(
             [
@@ -115,8 +118,7 @@ class TestInlineMarkdown(unittest.TestCase):
         self.assertListEqual(
             [
                 TextNode("This is text with an ", TextType.PLAIN_TEXT),
-                TextNode("image", TextType.IMAGES,
-                         "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode("image", TextType.IMAGES, "https://i.imgur.com/zjjcJKZ.png"),
             ],
             new_nodes,
         )
@@ -129,8 +131,9 @@ class TestInlineMarkdown(unittest.TestCase):
         new_nodes = split_nodes_image([node])
         self.assertListEqual(
             [
-                TextNode("image", TextType.IMAGES,
-                         "https://www.example.COM/IMAGES.PNG"),
+                TextNode(
+                    "image", TextType.IMAGES, "https://www.example.COM/IMAGES.PNG"
+                ),
             ],
             new_nodes,
         )
@@ -144,8 +147,7 @@ class TestInlineMarkdown(unittest.TestCase):
         self.assertListEqual(
             [
                 TextNode("This is text with an ", TextType.PLAIN_TEXT),
-                TextNode("image", TextType.IMAGES,
-                         "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode("image", TextType.IMAGES, "https://i.imgur.com/zjjcJKZ.png"),
                 TextNode(" and another ", TextType.PLAIN_TEXT),
                 TextNode(
                     "second image", TextType.IMAGES, "https://i.imgur.com/3elNhQu.png"
@@ -165,8 +167,7 @@ class TestInlineMarkdown(unittest.TestCase):
                 TextNode("This is text with a ", TextType.PLAIN_TEXT),
                 TextNode("link", TextType.LINKS, "https://boot.dev"),
                 TextNode(" and ", TextType.PLAIN_TEXT),
-                TextNode("another link", TextType.LINKS,
-                         "https://blog.boot.dev"),
+                TextNode("another link", TextType.LINKS, "https://blog.boot.dev"),
                 TextNode(" with text that follows", TextType.PLAIN_TEXT),
             ],
             new_nodes,
@@ -184,11 +185,13 @@ class TestInlineMarkdown(unittest.TestCase):
                 TextNode(" word and a ", TextType.PLAIN_TEXT),
                 TextNode("code block", TextType.CODE),
                 TextNode(" and an ", TextType.PLAIN_TEXT),
-                TextNode("obi wan image", TextType.IMAGES,
-                         "https://i.imgur.com/fJRm4Vk.jpeg"),
+                TextNode(
+                    "obi wan image", TextType.IMAGES, "https://i.imgur.com/fJRm4Vk.jpeg"
+                ),
                 TextNode(" and a ", TextType.PLAIN_TEXT),
                 TextNode("link", TextType.LINKS, "https://boot.dev"),
-            ], new_nodes
+            ],
+            new_nodes,
         )
 
     def test_markdown_to_blocks(self):

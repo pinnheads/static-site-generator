@@ -1,18 +1,22 @@
 import os
 import sys
 
-from functions import extract_title
-from markdowntohtml import markdown_to_html_node
-from copytopublic import copy_dir_to_public
+from src.parser.text_parser import extract_title
+from src.parser.markdown_parser import markdown_to_html_node
+from src.utils.fs_utils import copy_dir_to_public
 
 
-def generate_page(from_path: os.PathLike, template_path: os.PathLike, dest_path: os.PathLike, basepath="/"):
+def generate_page(
+    from_path: os.PathLike,
+    template_path: os.PathLike,
+    dest_path: os.PathLike,
+    basepath="/",
+):
     md_content = None
     template_content = None
     html_content = None
 
-    print(f"Generating page from {from_path} to {
-          dest_path} using {template_path}")
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
     with open(from_path, "r") as src_file:
         md_content = src_file.read()
@@ -21,18 +25,32 @@ def generate_page(from_path: os.PathLike, template_path: os.PathLike, dest_path:
         template_content = template_file.read()
 
     html_content = markdown_to_html_node(md_content).to_html()
-    title = extract_title(md_content)
+    title = None
+    try:
+        title = extract_title(md_content)
+    except Exception as e:
+        title = os.path.splitext(os.path.basename(from_path))
 
-    content = template_content.replace("{{ Title }}", title).replace(
-        "{{ Content }}", html_content).replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
-    os.makedirs(os.path.dirname(os.path.join(
-        os.path.abspath("."), dest_path)), exist_ok=True)
+    content = (
+        template_content.replace("{{ Title }}", title)
+        .replace("{{ Content }}", html_content)
+        .replace('href="/', f'href="{basepath}')
+        .replace('src="/', f'src="{basepath}')
+    )
+    os.makedirs(
+        os.path.dirname(os.path.join(os.path.abspath("."), dest_path)), exist_ok=True
+    )
 
     with open(dest_path, "w") as dest_file:
         dest_file.write(content)
 
 
-def generate_page_recursive(dir_path_content="content/", template_path="template.html", dest_dir_path="docs/", basepath="/"):
+def generate_page_recursive(
+    dir_path_content="content/",
+    template_path="template.html",
+    dest_dir_path="docs/",
+    basepath="/",
+):
     # get abs paths
     src_path = os.path.join(os.path.abspath("."), dir_path_content)
     template = os.path.join(os.path.abspath("."), template_path)
@@ -46,17 +64,18 @@ def generate_page_recursive(dir_path_content="content/", template_path="template
                 current_item_path,
                 template,
                 os.path.join(dest_dir_path, item.replace(".md", ".html")),
-                basepath
+                basepath,
             )
         else:
             new_dest_path = os.path.join(dest_dir, item)
             generate_page_recursive(
-                current_item_path, template_path, new_dest_path, basepath)
+                current_item_path, template_path, new_dest_path, basepath
+            )
 
 
 def main():
     basepath = "/"
-    if len(sys.argv) != 0 and sys.argv[1] is not None:
+    if len(sys.argv) > 1:
         basepath = sys.argv[1]
         copy_dir_to_public(dest_path="docs/")
 
