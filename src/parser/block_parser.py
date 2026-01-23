@@ -15,6 +15,7 @@ def markdown_to_blocks(markdown: str) -> list[str]:
 
 
 def block_to_block_type(md: str) -> BlockType:
+    lines = md.split("\n")
     match md:
         case md if md.startswith(("# ", "## ", "### ", "#### ", "##### ", "###### ")):
             return BlockType.HEADING
@@ -26,6 +27,10 @@ def block_to_block_type(md: str) -> BlockType:
             return BlockType.UNORDERED_LIST
         case md if md.startswith("1. "):
             return BlockType.ORDERED_LIST
+        case md if (
+            len(lines) > 1 and "|" in lines[0] and "|" in lines[1] and "-" in lines[1]
+        ):
+            return BlockType.TABLE
         case _:
             return BlockType.PARAGRAPH
 
@@ -45,6 +50,8 @@ def block_to_html(md: str, block_type: BlockType) -> HTMLNode:
             return list_block_to_html(md, BlockType.ORDERED_LIST)
         case BlockType.CODE:
             return code_block_to_html(md)
+        case BlockType.TABLE:
+            return table_block_to_html(md)
         case _:
             return paragraph_block_to_html(md)
 
@@ -57,6 +64,41 @@ def text_to_children(md: str) -> list[HTMLNode]:
         html_node = text_node_to_html_node(node)
         new_nodes.append(html_node)
     return new_nodes
+
+
+def table_block_to_html(md: str) -> ParentNode:
+    """Converts table markdown block to html table"""
+    lines = md.split("\n")
+    table_children = []
+
+    # Header of table is the first line
+    header_line = lines[0]
+    # Get the title for the header by striping '|' first and then spliting on '|'
+    headers = [h.strip() for h in header_line.strip("|").split("|")]
+    header_cells = []
+    for header in headers:
+        header_node = text_to_children(header)
+        th = ParentNode("th", header_node)
+        header_cells.append(th)
+
+    # Create header row
+    header_row = ParentNode("tr", header_cells)
+    table_children.append(header_row)
+
+    for i in range(2, len(lines)):
+        # Skip the first index as it only contains | --- | --- |
+        row_line = lines[i]
+        cells = [cell.strip() for cell in row_line.strip("|").split("|")]
+        row_cells = []
+        for cell in cells:
+            cell_node = text_to_children(cell)
+            td = ParentNode("td", cell_node)
+            row_cells.append(td)
+
+        data_row = ParentNode("tr", row_cells)
+        table_children.append(data_row)
+
+    return ParentNode("table", table_children)
 
 
 def code_block_to_html(md: str) -> HTMLNode:

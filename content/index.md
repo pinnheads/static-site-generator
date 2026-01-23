@@ -41,6 +41,13 @@ func main(){
 }
 ```
 
+| Ring Bearer | Race | Number of Rings | Power |
+| --- | --- | --- | --- |
+| Elven Kings | Elves | 3 | Healing & Preservation |
+| Dwarf Lords | Dwarves | 7 | Wealth & Mining |
+| Mortal Men | Men | 9 | Power & Doom |
+| Dark Lord | Maiar | 1 | Control them all |
+
 Want to get in touch? [Contact me here](/contact).
 
 This site was generated with a custom-built [static site generator](https://www.boot.dev/courses/build-static-site-generator-python) from the course on [Boot.dev](https://www.boot.dev).

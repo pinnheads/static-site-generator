@@ -16,7 +16,8 @@ def generate_page(
     template_content = None
     html_content = None
 
-    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    print(f"Generating page from {from_path} to {
+          dest_path} using {template_path}")
 
     with open(from_path, "r") as src_file:
         md_content = src_file.read()
@@ -77,8 +78,8 @@ def main():
     basepath = "/"
     if len(sys.argv) > 1:
         basepath = sys.argv[1]
-        copy_dir_to_public(dest_path="docs/")
 
+    copy_dir_to_public(dest_path="docs/")
     copy_dir_to_public()
     generate_page_recursive(basepath=basepath)
 
