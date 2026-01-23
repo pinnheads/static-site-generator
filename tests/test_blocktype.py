@@ -40,14 +40,14 @@ class TestBlockType(unittest.TestCase):
         block_type = block_to_block_type(unordered_list)
         self.assertEqual(block_type, BlockType.UNORDERED_LIST)
 
-    def test_not_unordered_list(self):
+    def test_unordered_list_asterisk(self):
         unordered_list = """* item 1
         * item 2
         * item 3
         * item 4
         """
         block_type = block_to_block_type(unordered_list)
-        self.assertEqual(block_type, BlockType.PARAGRAPH)
+        self.assertEqual(block_type, BlockType.UNORDERED_LIST)
 
     def test_ordered_list(self):
         ordered_list = """1. Item 1

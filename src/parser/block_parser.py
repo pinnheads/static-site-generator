@@ -22,7 +22,7 @@ def block_to_block_type(md: str) -> BlockType:
             return BlockType.CODE
         case md if md.startswith("> "):
             return BlockType.QUOTE
-        case md if md.startswith("- "):
+        case md if md.startswith(("- ", "* ", "+ ")):
             return BlockType.UNORDERED_LIST
         case md if md.startswith("1. "):
             return BlockType.ORDERED_LIST
@@ -70,26 +70,24 @@ def code_block_to_html(md: str) -> HTMLNode:
 
 def list_block_to_html(md: str, block_type: BlockType) -> HTMLNode:
     """Convert list markdown block to html nodes"""
-    md = md.replace("\n", "")
-    if block_type == BlockType.ORDERED_LIST:
-        md = re.sub(r"\d+\. ", "- ", md)
-
-    texts = md.split("- ")
+    lines = md.split("\n")
     children = []
-    for text in texts:
-        html_nodes = text_to_children(text)
-        if len(html_nodes) < 2:
-            li_node = map(lambda node: LeafNode("li", node.to_html()), html_nodes)
+    for line in lines:
+        text = ""
+        if block_type == BlockType.ORDERED_LIST:
+            text = re.sub(r"^\d+\. ", "", line)
         else:
-            html_nodes = [node.to_html() for node in html_nodes]
-            li_text = "".join(html_nodes)
-            li_node = [LeafNode("li", li_text)]
-        children.extend(li_node)
+            text = re.sub(r"^[-*+] ", "", line)
 
-    if block_type == BlockType.ORDERED_LIST:
-        return ParentNode("ol", children)
-    else:
-        return ParentNode("ul", children)
+        html_nodes = text_to_children(text)
+        li_node = LeafNode(
+            "li", "".join(list(map(lambda node: node.to_html(), html_nodes)))
+        )
+
+        children.append(li_node)
+
+    tag = "ol" if block_type == BlockType.ORDERED_LIST else "ul"
+    return ParentNode(tag, children)
 
 
 def quote_block_to_html(md: str) -> HTMLNode:
