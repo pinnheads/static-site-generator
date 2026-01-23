@@ -195,10 +195,15 @@ def text_to_textnodes(text: str) -> list[TextNode]:
     Converts a simple markdown text string to a list of TextNodes
     """
     node = TextNode(text, TextType.PLAIN_TEXT)
-    bold_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
-    italic_nodes = split_nodes_delimiter(bold_nodes, "_", TextType.ITALIC)
-    code_nodes = split_nodes_delimiter(italic_nodes, "`", TextType.CODE)
-    link_nodes = split_nodes_link(code_nodes)
+    # Bold Nodes
+    nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, "__", TextType.BOLD)
+    # Italics Nodes
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "*", TextType.ITALIC)
+    # Code
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+    link_nodes = split_nodes_link(nodes)
     return split_nodes_image(link_nodes)
 
 
