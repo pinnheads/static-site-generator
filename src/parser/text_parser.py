@@ -35,8 +35,12 @@ def text_node_to_html_node(text_node) -> LeafNode:
             )
         case TextType.IMAGES:
             # return a LeafNode iwth img tag and src, alt props
+            url = text_node.url
+            if url.lower().endswith((".png", ".jpg", ".jpeg")):
+                base = url.split(".", 1)[0]
+                url = f"{base}.webp"
             return LeafNode(
-                tag="img", value="", props={"src": text_node.url, "alt": text_node.text, "loading": "lazy"}
+                tag="img", value="", props={"src": url, "alt": text_node.text, "loading": "lazy"}
             )
         case _:
             # raise exception on any other TextType
