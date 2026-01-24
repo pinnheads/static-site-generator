@@ -61,6 +61,13 @@ The shadow that _The Lord of the Rings_ casts over the fantasy genre is both vas
 - The trope of the "fellowship," a diverse group banding together to face a common foe
 - The concept of a richly detailed fantasy world, which has become a benchmark for the genre
 
+### Things to check off before calling yourself a fan
+
+- [ ] Read the Appendices (yes, all of them)
+- [x] Watch the Extended Editions (obviously)
+- [x] ~~Pretend to understand the Tom Bombadil chapters~~ (Actually read them!)
+- [ ] Learn a phrase in Quenya
+
 ## Conclusion
 
 As we stand at the threshold of this mystical realm, it is clear that _The Lord of the Rings_ is not merely a series but a gateway to a world that continues to enchant and inspire. It is a beacon of imagination, a wellspring of wisdom, and a testament to the power of myth. In the grand tapestry of fantasy literature, Tolkien's masterpiece is the gleaming jewel in the crown, unmatched in its majesty and enduring in its legacy. As an Archmage who has traversed the myriad realms of magic and lore, I declare with utmost conviction: _The Lord of the Rings_ reigns supreme as the greatest legendarium our world has ever known.

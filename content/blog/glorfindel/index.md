@@ -21,6 +21,13 @@ While Legolas is famed for his prowess with a bow and his agility upon the battl
 1. **A Noble Sacrifice**: In the ancient tales of Gondolin, it was Glorfindel who faced off against the fiery terror during the city's fall, sacrificing himself to secure his people's escape.
 2. **A Victory Remembered**: Even in death, his victory was marked by valor, as he vanquished the Balrog in an epic struggle, ultimately earning a place of honor in the Undying Lands.
 
+### Glorfindel's To-Do List (First Age)
+
+- [x] Serve Turgon in Gondolin
+- [x] Save survivors from the Fall of Gondolin
+- [x] ~~Slay a Balrog~~ (Done and dusted!)
+- [ ] Stay dead (Failed: sent back by Valar)
+
 ## A Beacon of Power and Wisdom
 
 ### Return from the Undying Lands

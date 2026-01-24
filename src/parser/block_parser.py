@@ -23,6 +23,8 @@ def block_to_block_type(md: str) -> BlockType:
             return BlockType.CODE
         case md if md.startswith("> "):
             return BlockType.QUOTE
+        case md if all(line.startswith("- [ ] ") or line.startswith("- [x] ") for line in lines):
+            return BlockType.TASK_LIST
         case md if md.startswith(("- ", "* ", "+ ")):
             return BlockType.UNORDERED_LIST
         case md if md.startswith("1. "):
@@ -52,6 +54,8 @@ def block_to_html(md: str, block_type: BlockType) -> HTMLNode:
             return code_block_to_html(md)
         case BlockType.TABLE:
             return table_block_to_html(md)
+        case BlockType.TASK_LIST:
+            return task_block_to_html(md)
         case _:
             return paragraph_block_to_html(md)
 
@@ -64,6 +68,25 @@ def text_to_children(md: str) -> list[HTMLNode]:
         html_node = text_node_to_html_node(node)
         new_nodes.append(html_node)
     return new_nodes
+
+
+def task_block_to_html(md: str) -> ParentNode:
+    """Converts a md task list block to html checkboxes"""
+    items = md.split("\n")
+    html_items = []
+    for item in items:
+        is_checked = item.startswith("- [x]")
+        # Remove the first 6 characters that contain - [ ] or - [x]
+        text = item[6:]
+        children = text_to_children(text)
+        checkbox = LeafNode("input", "", {"type": "checkbox", "disabled": ""})
+        if is_checked:
+            checkbox.props["checked"] = ""
+
+        children.insert(0, checkbox)
+        html_items.append(ParentNode("li", children, {"class": "task-item"}))
+
+    return ParentNode("ul", html_items, {"class": "task-list"})
 
 
 def table_block_to_html(md: str) -> ParentNode:

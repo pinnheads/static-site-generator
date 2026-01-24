@@ -32,6 +32,13 @@ In a tale defined by intricate connections and deeply rooted mythology, Bombadil
 - **A Mystery Without Resolution**: Unlike other enigmatic figures whose backstories enrich the tapestry, Tom remains enigmatic, shrouded in mystery that neither advances the plot nor deepens the lore.
 - **A Departure from Tone**: His presence, filled with lighthearted songs and whimsical antics, contrasts sharply with the solemnity and tension that define the rest of the saga.
 
+### Why Tom is just... odd
+
+- [x] He wears bright blue boots (fashion crime?)
+- [x] The One Ring has zero effect on him
+- [x] He sings... ~~constantly~~ a lot
+- [ ] He actually fits into the plot (Nope)
+
 ```
 print("Tom")
 print("Bombadil")

@@ -33,6 +33,13 @@ Here's the deal, **I like Tolkien**.
 8. Sauron
 9. Aragorn
 
+## Reading Goals for 2026
+
+- [x] ~~The Hobbit (again)~~
+- [ ] The Silmarillion (it's dense!)
+- [ ] Unfinished Tales
+- [ ] The Fall of Gondolin
+
 Here's what `elflang` looks like (the perfect coding language):
 
 ```
