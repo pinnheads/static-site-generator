@@ -28,6 +28,8 @@ def text_node_to_html_node(text_node) -> LeafNode:
         case TextType.CODE:
             # return a LeafNode with code tag
             return LeafNode(tag="code", value=text_node.text)
+        case TextType.STRIKETHROUGH:
+            return LeafNode(tag="s", value=text_node.text)
         case TextType.LINKS:
             # return a LeafNode with a tag and href as props
             return LeafNode(
@@ -206,6 +208,8 @@ def text_to_textnodes(text: str) -> list[TextNode]:
     # Italics Nodes
     nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
     nodes = split_nodes_delimiter(nodes, "*", TextType.ITALIC)
+    # Strikethrough
+    nodes = split_nodes_delimiter(nodes, "~~", TextType.STRIKETHROUGH)
     # Code
     nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
     link_nodes = split_nodes_link(nodes)

@@ -6,6 +6,7 @@ class TextType(Enum):
     BOLD = "**bold_text**"
     ITALIC = "__italic_text__"
     CODE = "`code text`"
+    STRIKETHROUGH = "~~text~~"
     LINKS = "link: [anchor text](url)"
     IMAGES = "image: ![alt text](url)"
 
