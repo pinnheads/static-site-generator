@@ -36,7 +36,7 @@ def text_node_to_html_node(text_node) -> LeafNode:
         case TextType.IMAGES:
             # return a LeafNode iwth img tag and src, alt props
             return LeafNode(
-                tag="img", value="", props={"src": text_node.url, "alt": text_node.text}
+                tag="img", value="", props={"src": text_node.url, "alt": text_node.text, "loading": "lazy"}
             )
         case _:
             # raise exception on any other TextType
@@ -79,7 +79,8 @@ def split_nodes_delimiter(
             if i % 2 != 0:
                 new_nodes.append(TextNode(split_strings[i], text_type))
             else:
-                new_nodes.append(TextNode(split_strings[i], TextType.PLAIN_TEXT))
+                new_nodes.append(
+                    TextNode(split_strings[i], TextType.PLAIN_TEXT))
         extracted_nodes.extend(new_nodes)
 
     return extracted_nodes
